@@ -10,9 +10,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraintvalidation.ValidationTarget;
+import jp.co.metateam.library.model.Account;
+import jp.co.metateam.library.model.AccountDto;
 import jp.co.metateam.library.model.BookMst;
 import jp.co.metateam.library.model.BookMstDto;
 import jp.co.metateam.library.service.BookMstService;
@@ -50,5 +54,56 @@ public class BookController {
 
         return "book/add";
     }
+
     
+ @PostMapping("/book/add")
+ public String register(@Valid @ModelAttribute BookMstDto bookMstDto,BindingResult result,RedirectAttributes ra, Model model) {
+     try {
+        //入力された書籍にエラーがないか
+         boolean validTitle = bookMstService.isValidTitle(bookMstDto.getTitle(), model);
+         if (validTitle) {
+             model.addAttribute("bookMstDto", bookMstDto);
+             //return "book/add"; 
+         }
+       ///ISBNエラーがないか
+       boolean ValidIsbn =bookMstService.isValidIsbn(bookMstDto.getIsbn(),model);
+       if (validTitle) {
+        model.addAttribute( "bookMatDto",bookMstDto);  
+              //return "book/add"; 
+       }
+
+         //書籍名、Isbnどちらにエラーがある場合は遷移しない
+         if(validTitle||ValidIsbn){
+            return"/book/add";
+         }
+
+         
+
+        //重複チェック
+     boolean isbnExit = bookMstService.selectByIsbn(bookMstDto.getIsbn(),model);
+
+     //isbn存在既にエラー
+    if(isbnExit){
+        model.addAttribute("bookMatDto",bookMstDto);
+        return "/book/add";
+
+    }
+       
+    //エラーなしの場合DBに
+this.bookMstService.save(bookMstDto);
+
+///一覧画面に
+
+     
+    return "redirect:/book/index";
+
+    } catch(Exception e){
+
+        return"redirect:/book/add";
+
+    }
 }
+
+}
+ 
+ 

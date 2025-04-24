@@ -19,6 +19,41 @@
                         <div class="mb30 flexarea">
                             <span>
                                 <a th:href="@{/book/index}" class="link">← 一覧へ戻る</a>
+                                    <form>
+                                    <div>
+                                        
+                                        <div>*書籍登録は必須項目です</div>
+                                        <label for="title">書籍名</label>
+                                        <div class="error_msg" th:if="${errTitle}">
+                                            <p th:text="${errTitle}" style="color: red"></p>  
+                                        </div>
+                                        <input class="form_input" type="text" id="title" name="title" th:field="*{title}">
+
+                                      
+
+                                    
+                                        
+
+
+                                    </div>
+                                
+                                    <div>ISBN
+                                        <input class="form_input" type="text" id="isbn" name="isbn" th:field="*{isbn}">
+
+                                 <!--エラーメッセージ -->
+
+                                
+                                <div th:if="${errIsbn}" style="color: red;">
+                                    <p th:text="${errIsbn}"></p>
+                                </div>
+                            
+
+
+
+
+                                        <div><input id="submit_btn" type="submit" value="保存"></div>
+                                        
+                                </div>
                             </span>
                         </div>
                     </form>

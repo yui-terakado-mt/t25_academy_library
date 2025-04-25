@@ -70,7 +70,8 @@ public class BookMstService {
             }   
         return false;
         }
-    
+
+
     public boolean isValidIsbn(String isbn, Model model){
         if (StringUtils.isEmpty(isbn)){
             model.addAttribute("errIsbn", "ISBNを入力してください");
@@ -78,14 +79,14 @@ public class BookMstService {
         }
 
         /////文字数チェック
-        if (isbn.length()>13) {
-            model.addAttribute("errIsbn","ISBNは13文字以内で入力してください");
-            return true;   
+        if (isbn.length() !=13) {
+            model.addAttribute("errIsbn","ISBNは13文字で入力してください");
+            //return true;   
             
         }
 
         ////ISBNの文字数チェック半角数字のみ
-        if (isbn.matches("[0-9]+")) {
+        if (!isbn.matches("\\d+")) {
             model.addAttribute("errIsbn","ISBNは半角数字で入力してください");
             return true;  
             
